@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { View, Text, ViewStyle, StyleProp } from 'react-native';
-import { styles } from './styles';
+import { ViewStyle, StyleProp } from 'react-native';
+import { ExpensesOutput } from '../../components/expenses/ExpensesOutput';
 
 interface IProps {
   style?: StyleProp<ViewStyle>;
@@ -8,8 +8,8 @@ interface IProps {
 
 export const RecentExpenses: FC<IProps> = ({ style }) => {
   return (
-    <View style={ [styles.container, style] }>
-      <Text>temp RecentExpenses</Text>
-    </View>
+    <ExpensesOutput
+      period='Total'
+    />
   );
 };
