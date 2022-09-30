@@ -9,7 +9,6 @@ const DefaultHeaderOptions = {
 
 export const DefaultStackHeaderOptions: NativeStackNavigationOptions = {
   ...DefaultHeaderOptions,
-  contentStyle: { backgroundColor: '#24180f' },
 };
 
 export const DefaultBottomTabsHeaderOptions: BottomTabNavigationOptions = {

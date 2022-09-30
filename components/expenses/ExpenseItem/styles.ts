@@ -37,6 +37,9 @@ export const styles = StyleSheet.create({
   descContainer: {
     flexDirection: 'column',
   },
+  pressed: {
+    opacity: 0.75,
+  },
   text: {
     color: theme.colors.primary['50'],
   }
