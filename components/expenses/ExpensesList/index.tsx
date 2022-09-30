@@ -17,7 +17,7 @@ export const ExpensesList: FC<IProps> = ({ expenses, style }) => {
   ), []);
 
   const renderExpenses = () => {
-    if (!expenses.length) return <Text style={ styles.noExpenses }>You don't have any expenses yet...</Text>;
+    if (!expenses.length) return <Text style={ styles.noExpenses }>No expenses found</Text>;
 
     return (
       <FlatList

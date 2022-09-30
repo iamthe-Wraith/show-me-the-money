@@ -54,7 +54,7 @@ const ExpensesOverview: FC = () => {
 export default function App() {
   return (
     <>
-      <StatusBar style='dark' />
+      <StatusBar style='light' />
       <ExpensesStore>
         <NavigationContainer>
           <Stack.Navigator screenOptions={ DefaultStackHeaderOptions }>
