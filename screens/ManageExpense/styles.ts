@@ -2,15 +2,6 @@ import { StyleSheet } from 'react-native';
 import { theme } from '../../styles/theme';
 
 export const styles = StyleSheet.create({
-  button: {
-    minWidth: 120,
-    marginHorizontal: 8,
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   container: {
     flex: 1,
     padding: 24,
@@ -23,5 +14,8 @@ export const styles = StyleSheet.create({
     padding: 8,
     borderTopWidth: 2,
     borderTopColor: theme.colors.primary['200'],
+  },
+  inputsContainer: {
+    flexGrow: 1,
   }
 });

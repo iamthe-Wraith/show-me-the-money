@@ -3,11 +3,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FC, useCallback, useLayoutEffect, useMemo } from 'react';
 import { View, ViewStyle, StyleProp } from 'react-native';
 import { IconButton } from '../../components/buttons/IconButton';
-import { Button } from '../../components/buttons/Button';
 import { theme } from '../../styles/theme';
 import { RootParamList } from '../../types/navigation';
 import { styles } from './styles';
-import { useExpenses } from '../../contexts/expenses';
+import { IBaseExpense, useExpenses } from '../../contexts/expenses';
+import { ExpenseForm } from '../../components/ExpenseForm';
 
 interface IProps {
   style?: StyleProp<ViewStyle>;
@@ -41,28 +41,25 @@ export const ManageExpense: FC<IProps> = ({ style }) => {
     navigation.goBack();
   }, []);
 
-  const onConfirmPress = useCallback(() => {
-    
+  const onConfirmPress = useCallback((expenseData: IBaseExpense) => {
+    if (expense) {
+      updateExpense(expense.id, expenseData);
+    } else {
+      addExpense(expenseData);
+    }
+
     navigation.goBack();
   }, []);
 
+  
+
   return (
     <View style={ [styles.container, style] }>
-      <View style={ styles.buttonsContainer }>
-        <Button
-          onPress={ onCancelPress }
-          mode='flat'
-          style={ styles.button }
-        >
-            Cancel
-        </Button>
-        <Button
-          onPress={ onConfirmPress }
-          style={ styles.button }
-        >
-          { expense ? 'Update' : 'Add' }
-        </Button>
-      </View>
+      <ExpenseForm
+        expense={ expense }
+        onCancel={ onCancelPress }
+        onConfirm={ onConfirmPress }
+      />
       <View style={ styles.deleteContainer }>
         {
           expense && (

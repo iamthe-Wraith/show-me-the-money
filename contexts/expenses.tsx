@@ -77,7 +77,7 @@ interface IExpensesContext {
   expenses: IExpense[];
   addExpense: (expense: IBaseExpense) => void;
   removeExpense: (id: string) => void;
-  updateExpense: (expense: IExpense) => void;
+  updateExpense: (id: string, expenseData: IBaseExpense) => void;
 }
 
 interface IProps {
@@ -105,11 +105,11 @@ export const ExpensesStore: FC<IProps> = ({ children }) => {
     setExpenses((prevExpenses) => prevExpenses.filter((expense) => expense.id !== id));
   }, []);
 
-  const updateExpense = useCallback((expense: IExpense) => {
+  const updateExpense = useCallback((id: string, expenseData: IBaseExpense) => {
     setExpenses((prevExpenses) => prevExpenses.map((prevExpense) => {
-      if (prevExpense.id !== expense.id) return prevExpense;
+      if (prevExpense.id === id) return { ...prevExpense, ...expenseData } as IExpense;
 
-      return expense;
+      return prevExpense;
     }));
   }, []);
 
