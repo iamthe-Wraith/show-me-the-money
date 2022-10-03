@@ -1,4 +1,5 @@
 import { createContext, FC, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
+import { ExpenseClient } from '../utils/http';
 
 export interface IBaseExpense {
   date: Date;
@@ -75,7 +76,9 @@ export const DUMMY_EXPENSES: IExpense[] = [
 
 interface IExpensesContext {
   expenses: IExpense[];
+  loading: boolean;
   addExpense: (expense: IBaseExpense) => void;
+  getExpenses: () => Promise<void>;
   removeExpense: (id: string) => void;
   updateExpense: (id: string, expenseData: IBaseExpense) => void;
 }
@@ -89,38 +92,62 @@ const ExpensesContext = createContext<IExpensesContext>(null);
 export const useExpenses = () => useContext(ExpensesContext);
 
 export const ExpensesStore: FC<IProps> = ({ children }) => {
-  const [expenses, setExpenses] = useState<IExpense[]>(DUMMY_EXPENSES);
+  const [expenses, setExpenses] = useState<IExpense[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const addExpense = useCallback((baseExpense: IBaseExpense) => {
+  const addExpense = useCallback(async (baseExpense: IBaseExpense) => {
+    // ! optimistic request...should hand error in a production app
+    const newExpenseId = await ExpenseClient.storeExpense(baseExpense);
+
     setExpenses((prevExpenses) => [
       {
+        id: newExpenseId,
         ...baseExpense,
-        id: Math.random().toString(),
       },
       ...prevExpenses,
     ]);
   }, []);
 
-  const removeExpense = useCallback((id: string) => {
-    setExpenses((prevExpenses) => prevExpenses.filter((expense) => expense.id !== id));
+  const getExpenses = useCallback(async () => {
+    setLoading(true);
+
+    // ! optimistic request...should hand error in a production app
+    const exps = await ExpenseClient.getExpenses();
+  
+    setLoading(false);
+    setExpenses(exps.sort((a, b) => a.date < b.date ? 1 : -1));
   }, []);
 
-  const updateExpense = useCallback((id: string, expenseData: IBaseExpense) => {
+  const removeExpense = useCallback(async (id: string) => {
+    setExpenses((prevExpenses) => prevExpenses.filter((expense) => expense.id !== id));
+
+    // ! optimistic request...should hand error in a production app
+    await ExpenseClient.deleteExpense(id);
+  }, []);
+
+  const updateExpense = useCallback(async (id: string, expenseData: IBaseExpense) => {
     setExpenses((prevExpenses) => prevExpenses.map((prevExpense) => {
       if (prevExpense.id === id) return { ...prevExpense, ...expenseData } as IExpense;
-
+      
       return prevExpense;
     }));
+
+    // ! optimistic request...should hand error in a production app
+    await ExpenseClient.updateExpense(id, expenseData);
   }, []);
 
   const value = useMemo(() => ({
     expenses,
+    loading,
     addExpense,
+    getExpenses,
     removeExpense,
     updateExpense,
   }), [
     expenses,
+    loading,
     addExpense,
+    getExpenses,
     removeExpense,
     updateExpense,
   ]);

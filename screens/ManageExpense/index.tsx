@@ -51,13 +51,12 @@ export const ManageExpense: FC<IProps> = ({ style }) => {
     navigation.goBack();
   }, []);
 
-  
-
   return (
     <View style={ [styles.container, style] }>
       <ExpenseForm
         expense={ expense }
         onCancel={ onCancelPress }
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onConfirm={ onConfirmPress }
       />
       <View style={ styles.deleteContainer }>

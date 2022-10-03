@@ -1,6 +1,7 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { ViewStyle, StyleProp } from 'react-native';
 import { ExpensesOutput } from '../../components/expenses/ExpensesOutput';
+import { LoadingOverlay } from '../../components/LoadingOverlay';
 import { useExpenses } from '../../contexts/expenses';
 import { getDateMinusDays } from '../../utils/date';
 
@@ -9,12 +10,19 @@ interface IProps {
 }
 
 export const RecentExpenses: FC<IProps> = ({ style }) => {
-  const { expenses } = useExpenses();
+  const { expenses, loading, getExpenses } = useExpenses();
+
+  useEffect(() => {
+    void getExpenses();
+  }, []);
+
   const recentExpenses = useMemo(() => {
     const threshold = getDateMinusDays(new Date(), 7);
     return expenses.filter(expense => expense.date > threshold);
   }, [expenses]);
   
+  if (loading) return <LoadingOverlay />;
+
   return (
     <ExpensesOutput
       style={ style }
